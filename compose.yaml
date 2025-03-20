@@ -18,7 +18,7 @@ services:
       - app_network
     command: sh -c "composer install --no-interaction && \
       php bin/console doctrine:schema:update --force && \
-      php bin/console doctrine:fixtures:load && \
+      php bin/console doctrine:fixtures:load --no-interaction && \
       php-fpm -D && \
       supercronic /etc/crontab"
 
@@ -38,10 +38,10 @@ services:
   mysql:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DBNAME}
-      MYSQL_USER: ${USERNAME}
-      MYSQL_PASSWORD: ${PASSWORD}
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
@@ -65,8 +65,8 @@ services:
       - "5672:5672"  # RabbitMQ service
       - "15672:15672"  # Management interface
     environment:
-      RABBITMQ_DEFAULT_USER: ${RMQUSER}
-      RABBITMQ_DEFAULT_PASS: ${RMQPASS}
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     networks:
       - app_network
 
