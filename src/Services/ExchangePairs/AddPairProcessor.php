@@ -6,7 +6,9 @@ use App\Services\ExchangePairs\Interfaces\AddPairStorageInterface;
 
 final class AddPairProcessor extends AbstractPairProcessor
 {
-    public function __construct(private AddPairStorageInterface $pairStorageService) {}
+    public function __construct(private AddPairStorageInterface $pairStorageService)
+    {
+    }
 
     protected function processSinglePair(string $fromCurrency, string $toCurrency): bool
     {

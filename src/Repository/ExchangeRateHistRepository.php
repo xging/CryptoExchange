@@ -4,8 +4,8 @@ namespace App\Repository;
 
 use App\Entity\ExchangeRateHist;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<ExchangeRateHist>
@@ -16,7 +16,6 @@ class ExchangeRateHistRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, ExchangeRateHist::class);
     }
-
 
     public function showRatesPairHist(string $fromCurrency, string $toCurrency, ?string $date, ?string $time): array
     {
@@ -30,12 +29,12 @@ class ExchangeRateHistRepository extends ServiceEntityRepository
             ->setParameter('to_currency', $toCurrency)
             ->orderBy('e.id', 'DESC');
 
-        if ($date !== null) {
-            $startOfDay = new \DateTimeImmutable($date . ' 00:00:00');
-            $endOfDay = new \DateTimeImmutable($date . ' 23:59:59');
+        if (null !== $date) {
+            $startOfDay = new \DateTimeImmutable($date.' 00:00:00');
+            $endOfDay   = new \DateTimeImmutable($date.' 23:59:59');
 
-            if ($time !== null) {
-                $dateTime = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $date . ' ' . $time);
+            if (null !== $time) {
+                $dateTime = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $date.' '.$time);
 
                 if (!$dateTime) {
                     throw new \InvalidArgumentException('Invalid date or time format.');
@@ -52,16 +51,15 @@ class ExchangeRateHistRepository extends ServiceEntityRepository
 
         $rates = $qb->getQuery()->getResult();
 
-        return array_map(fn($rate) => [
+        return array_map(fn ($rate) => [
             'from_currency' => $rate->getFromCurrency(),
-            'to_currency' => $rate->getToCurrency(),
-            'old_rate' => $rate->getOldRate(),
-            'last_rate' => $rate->getNewRate(),
-            'update_date' => $rate->getLastUpdateDate()?->format('Y-m-d H:i:s'),
+            'to_currency'   => $rate->getToCurrency(),
+            'old_rate'      => $rate->getOldRate(),
+            'last_rate'     => $rate->getNewRate(),
+            'update_date'   => $rate->getLastUpdateDate()?->format('Y-m-d H:i:s'),
             'creation_date' => $rate->getCreationDate()?->format('Y-m-d H:i:s'),
         ], $rates);
     }
-
 
     public function saveExchangeRateHist(ExchangeRateHist $exchangeRateHist): bool
     {
@@ -69,8 +67,9 @@ class ExchangeRateHistRepository extends ServiceEntityRepository
             $this->em->persist($exchangeRateHist);
             $this->em->flush();
         } catch (\Exception $e) {
-            throw new \RuntimeException("Error saving history: " . $e->getMessage(), 0, $e);
+            throw new \RuntimeException('Error saving history: '.$e->getMessage(), 0, $e);
         }
+
         return true;
     }
 }

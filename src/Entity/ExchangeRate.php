@@ -11,16 +11,16 @@ class ExchangeRate
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(type: 'string', length: 10)]
     private ?string $from_currency = null;
 
-    #[ORM\Column(length: 3)]
+    #[ORM\Column(type: 'string', length: 3)]
     private ?string $to_currency = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: 'float', nullable: true)]
     private ?float $rate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

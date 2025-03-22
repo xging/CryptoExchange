@@ -1,4 +1,5 @@
 <?php
+
 // require_once __DIR__ . '/../vendor/autoload.php';
 
 // use App\Services\Http\HttpKernel;
@@ -27,7 +28,7 @@
 //             $kernel = new HttpKernel();
 //             $kernel->handle($_SERVER['REQUEST_URI']);
 //         }
-        
+
 //     }
 // }
 // // Инициализация и вызов метода

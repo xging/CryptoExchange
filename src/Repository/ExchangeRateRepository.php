@@ -4,8 +4,8 @@ namespace App\Repository;
 
 use App\Entity\ExchangeRate;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<ExchangeRate>
@@ -25,20 +25,18 @@ class ExchangeRateRepository extends ServiceEntityRepository
                 ['id' => 'DESC']
             );
 
-        return array_map(fn($rate) => [
+        return array_map(fn ($rate) => [
             'from_currency' => $rate->getFromCurrency(),
-            'to_currency' => $rate->getToCurrency(),
-            'rate' => $rate->getRate(),
+            'to_currency'   => $rate->getToCurrency(),
+            'rate'          => $rate->getRate(),
         ], $rates);
     }
-
 
     public function rateExists(string $fromCurrency, string $toCurrency): bool
     {
         return $this->em->getRepository(ExchangeRate::class)
             ->count(['from_currency' => $fromCurrency, 'to_currency' => $toCurrency]) > 0;
     }
-
 
     public function updateExchangeRate(string $fromCurrency, string $toCurrency, float $newRate): bool
     {
@@ -69,8 +67,10 @@ class ExchangeRateRepository extends ServiceEntityRepository
         if ($exchangeRate) {
             $this->em->remove($exchangeRate);
             $this->em->flush();
+
             return true;
         }
+
         return false;
     }
 
@@ -80,8 +80,9 @@ class ExchangeRateRepository extends ServiceEntityRepository
             $this->em->persist($exchangeRate);
             $this->em->flush();
         } catch (\Exception $e) {
-            throw new \RuntimeException("Error saving currency pairs: " . $e->getMessage(), 0, $e);
+            throw new \RuntimeException('Error saving currency pairs: '.$e->getMessage(), 0, $e);
         }
+
         return true;
     }
 }

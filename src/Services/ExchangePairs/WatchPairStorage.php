@@ -14,24 +14,27 @@ final class WatchPairStorage implements WatchPairStorageInterface
     public function __construct(
         private CurrencyRateExternalApiService $currencyRateApi,
         private ExchangeRateRepository $exchangeRateRepository,
-        private ExchangeRateHistRepository $exchangeRateHistRepository
-    ) {}
+        private ExchangeRateHistRepository $exchangeRateHistRepository,
+    ) {
+    }
 
     public function processExchangeRate(string $fromCurrency, string $toCurrency): bool
     {
         $rate = $this->fetchRateOrFallback($fromCurrency, $toCurrency);
 
         if (!$this->rateExists($fromCurrency, $toCurrency)) {
-            $exchangeRate = new ExchangeRate;
+            $exchangeRate = new ExchangeRate();
             $exchangeRate->setFromCurrency($fromCurrency)
                 ->setToCurrency($toCurrency)
                 ->setRate($rate)
                 ->setCreationDate(new \DateTime());
 
             $this->handleNewRate($fromCurrency, $toCurrency, $rate, $exchangeRate);
+
             return true;
         } else {
             $this->handleExistingRate($fromCurrency, $toCurrency, $rate);
+
             return false;
         }
     }
@@ -48,8 +51,9 @@ final class WatchPairStorage implements WatchPairStorageInterface
 
     private function handleNewRate(string $fromCurrency, string $toCurrency, float $rate, ExchangeRate $exchangeRate): void
     {
-        if ($rate === 0.0) {
+        if (0.0 === $rate) {
             echo "*** Failed to save rate for: {$fromCurrency} -> {$toCurrency}\n";
+
             return;
         }
 
@@ -64,7 +68,7 @@ final class WatchPairStorage implements WatchPairStorageInterface
     {
         $exchangeRateBeforeUpdate = $this->exchangeRateRepository->findOneBy([
             'from_currency' => $fromCurrency,
-            'to_currency' => $toCurrency
+            'to_currency'   => $toCurrency,
         ]);
 
         if (!$exchangeRateBeforeUpdate) {
@@ -76,7 +80,7 @@ final class WatchPairStorage implements WatchPairStorageInterface
         if ($this->exchangeRateRepository->updateExchangeRate($fromCurrency, $toCurrency, $rate)) {
             echo "*** Updated rate: {$fromCurrency} -> {$toCurrency}, rate: {$rate}\n";
 
-            $exchangeRateHist = new ExchangeRateHist;
+            $exchangeRateHist = new ExchangeRateHist();
             $exchangeRateHist->setFromCurrency($fromCurrency)
                 ->setToCurrency($toCurrency)
                 ->setOldRate($oldRate)

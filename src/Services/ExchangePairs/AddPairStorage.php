@@ -8,7 +8,9 @@ use App\Services\ExchangePairs\Interfaces\AddPairStorageInterface;
 
 final class AddPairStorage implements AddPairStorageInterface
 {
-    public function __construct(private CurrencyPairsRepository $currencyPairRepository) {}
+    public function __construct(private CurrencyPairsRepository $currencyPairRepository)
+    {
+    }
 
     public function saveIfNotExists(string $fromCurrency, string $toCurrency): bool
     {

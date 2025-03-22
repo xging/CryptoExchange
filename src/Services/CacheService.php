@@ -1,4 +1,4 @@
-<?PHP
+<?php
 
 namespace App\Services;
 
@@ -6,14 +6,11 @@ use Predis\Client;
 
 final class CacheService
 {
-    private Client $redis;
-
-    public function __construct(Client $redis)
+    public function __construct(private Client $redis)
     {
-        $this->redis = $redis;
     }
 
-    //Get or Set Redis cached data
+    // Get or Set Redis cached data
     public function getOrSetCache(string $cacheKey, callable $callback, int $ttl = 300): mixed
     {
         $cachedData = $this->redis->get($cacheKey);

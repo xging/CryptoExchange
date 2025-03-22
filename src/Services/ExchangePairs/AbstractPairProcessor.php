@@ -2,7 +2,6 @@
 
 namespace App\Services\ExchangePairs;
 
-use App\DTO\CurrencyPairDTO;
 use App\Services\ExchangePairs\Interfaces\PairProcessorInterface;
 use App\Services\ExchangePairs\Interfaces\PairStorageInterface;
 
@@ -14,6 +13,7 @@ abstract class AbstractPairProcessor implements PairProcessorInterface
     {
         if (empty($pairs)) {
             echo "*** No currency pairs found.\n";
+
             return;
         }
 

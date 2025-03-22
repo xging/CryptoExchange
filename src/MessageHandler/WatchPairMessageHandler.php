@@ -9,7 +9,9 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 final class WatchPairMessageHandler
 {
-    public function __construct(private WatchCurrencyPairService $watchPairCurrencyService) {}
+    public function __construct(private WatchCurrencyPairService $watchPairCurrencyService)
+    {
+    }
 
     public function __invoke(WatchPairMessage $message): void
     {

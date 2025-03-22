@@ -2,40 +2,37 @@
 
 namespace App\Services;
 
-use App\Services\CurrencyRateExternalAPI\CurlWrapper;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class CurrencyRateExternalApiService
 {
-
-    public function __construct(private CurlWrapper $curl, private ParameterBagInterface $params) {}
+    public function __construct(
+        private HttpClientInterface $httpClient,
+    ) {
+    }
 
     public function fetchExchangeRate(string $from, string $to): ?float
     {
+        usleep(2_000_000);
         $crypto = strtolower($from);
-        $fiat = strtolower($to);
+        $fiat   = strtolower($to);
 
         $url = "https://api.coingecko.com/api/v3/simple/price?ids={$crypto}&vs_currencies={$fiat}";
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        try {
+            $response = $this->httpClient->request('GET', $url, [
+                'timeout' => 10,
+            ]);
 
-        $response = $this->curl->exec($ch);
+            $data = $response->toArray();
 
-        if ($response === false) {
-            $error = $this->curl->error($ch);
-            $this->curl->close($ch);
+            if (isset($data[$crypto][$fiat])) {
+                return (float) $data[$crypto][$fiat];
+            }
+        } catch (\Throwable $e) {
+            echo $e->getMessage();
+
             return null;
-        }
-
-        $this->curl->close($ch);
-
-        $data = json_decode($response, true);
-
-        if (isset($data[$crypto][$fiat])) {
-            return (float) $data[$crypto][$fiat];
         }
 
         return null;

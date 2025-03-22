@@ -7,7 +7,9 @@ use App\Services\Interfaces\CurrencyPairInterface;
 
 final class DeleteCurrencyPairService implements CurrencyPairInterface
 {
-    public function __construct(private DeletePairProcessor $pairProcessorService) {}
+    public function __construct(private DeletePairProcessor $pairProcessorService)
+    {
+    }
 
     public function execute(array $args): void
     {

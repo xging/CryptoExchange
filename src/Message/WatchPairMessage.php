@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Message;
 
 class WatchPairMessage
@@ -10,6 +11,7 @@ class WatchPairMessage
     ) {
         $this->message = $message;
     }
+
     public function getMessage(): string
     {
         return $this->message;

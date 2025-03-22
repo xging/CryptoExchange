@@ -9,16 +9,17 @@ class DeletePairMessage
 
     public function __construct(
         string $message,
-        array $args
+        array $args,
     ) {
         $this->message = $message;
-        $this->args = $args;
+        $this->args    = $args;
     }
 
     public function getArgs(): array
     {
         return $this->args;
     }
+
     public function getMessage(): string
     {
         return $this->message;
